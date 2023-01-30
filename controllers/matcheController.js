@@ -1,33 +1,37 @@
 const supabase = require("../db/config");
 
 const getUserLastScore = async (req, res) => {
+  console.log(req.params);
   try {
     const userLastScore = await supabase
-      .from("matches")
+      .from("games")
       .select("*")
-      .eq("winner", req.params.id)
-      .first();
-    res.send(userLastScore);
+      .eq("winner", req.params.userId);
+    res.send(userLastScore.data[0]);
   } catch (err) {
     res.status(500).send(err);
   }
 };
 
-function filterConsecutive(array, column) {
-  return array.filter((row, index) => {
-    if (index === 0) return true;
-    return row[column] === array[index - 1][column] + 1;
-  });
-}
-
 const getUsersLongStrike = async (req, res) => {
   try {
     const longStrike = await supabase
-      .from("matches")
+      .from("games")
       .select("*")
-      .eq("winner", req.params.id);
-    const newLongStrike = filterConsecutive(longStrike, "match_id");
-    return newLongStrike;
+      .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`);
+    let currentStreak = 0;
+    let longestStreak = 0;
+    for (let game of longStrike.data) {
+      if (game.winner == req.params.userId) {
+        currentStreak += 1;
+        if (currentStreak > longestStreak) {
+          longestStreak = currentStreak;
+        }
+      } else {
+        currentStreak = 0;
+      }
+    }
+    res.send({ streak: longestStreak });
   } catch (err) {
     res.status(500).send(err);
   }
@@ -51,9 +55,9 @@ const addMatche = async (req, res) => {
 const getUsersMatcheHistory = async (req, res) => {
   try {
     const usersHistory = await supabase
-      .from("matcues")
+      .from("games")
       .select("*")
-      .eq("u1_id" || "u2_id", req.params.id);
+      .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`);
     res.send(usersHistory);
   } catch (err) {
     res.status(500).send(err);
