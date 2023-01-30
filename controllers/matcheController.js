@@ -38,11 +38,11 @@ const addMatche = async (req, res) => {
   try {
     const newMatche = {
       u1_id: u1_id,
-      us2_id: u2_id,
+      u2_id: u2_id,
       winner: winner,
     };
-    const matcheAdded = await supabase.from("matches").insert(newMatche);
-    res.send({ ok: true });
+    const matcheAdded = await supabase.from("games").insert(newMatche);
+    res.send(matcheAdded);
   } catch (err) {
     res.status(500).send(err);
   }
