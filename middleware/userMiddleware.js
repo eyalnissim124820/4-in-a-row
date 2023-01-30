@@ -35,25 +35,26 @@ async function checkUser(req, res, next) {
   const user = await supabase
     .from("users")
     .select("*")
-    .eq("email", req.query.email);
+    .eq("email", req.body.email);
   if (user.data.length == 0) {
-    console.log(user.data)
+    console.log(user.data);
     res.status(400).send(false);
     return;
   }
   req.result = user.data[0];
-  next()
+  next();
 }
 
-async function checkpassword(req, res, next){
-    const check = await bcrypt.compare(
-    `${req.query.password}`,
-    `${req.result.password}`)
-    console.log(check)
-    console.log(req.result)
-    if (check){
-      next()
-    }
+async function checkpassword(req, res, next) {
+  const check = await bcrypt.compare(
+    `${req.body.password}`,
+    `${req.result.password}`
+  );
+  console.log(check);
+  console.log(req.result);
+  if (check) {
+    next();
+  }
 }
 
 module.exports = { isUserExist, hashPassword, checkUser, checkpassword };
