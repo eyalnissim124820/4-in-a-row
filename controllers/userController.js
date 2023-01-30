@@ -13,7 +13,7 @@ const addUser = async (req, res) => {
       lastName: lastName,
     };
     const user = await addUserModel(newUser);
-    res.send({ ok: true });
+    res.send("Im in!!");
   } catch (err) {
     res.status(500).send(err);
   }
