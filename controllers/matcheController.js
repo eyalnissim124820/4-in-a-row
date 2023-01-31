@@ -55,33 +55,39 @@ const addMatche = async (req, res) => {
 };
 
 const getUsersMatcheHistory = async (req, res) => {
-  try {
-    const usersHistory = await supabase
-      .from("games")
-      .select("*")
-      .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`);
+  const usersHistory = await supabase
+    .from("games")
+    .select("*")
+    .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`);
 
-    const newlist2 = []
-    for (let game of usersHistory){
-      let name1 = (
-        await supabase.from("users").select("nickname").eq("id", game.u1_id)
-      ).data[0].nickname;
-      let name2 = (
-        await supabase.from("users").select("nickname").eq("id", game.u2_id)
-      ).data[0].nickname;
-      let winner = (
-        await supabase.from("users").select("nickname").eq("id", game.winner)
-      ).data[0].nickname;
-      newlist2.push({ ...game, u1Name: name1, u2Name: name2, winner: winner });
-      console.log(newlist2.length, usersHistory.length)
-      if (newlist2.length == usersHistory.length){
-        console.log("hey")
-      }
-    }
-   res.send(newlist);
-  } catch (err) {
-    res.status(500).send(err);
+  const newlist2 = [];
+  for (let i = 0; i < usersHistory.data.length; i++) {
+    let name1 = (
+      await supabase
+        .from("users")
+        .select("nickname")
+        .eq("id", usersHistory.data[i].u1_id)
+    ).data[0].nickname;
+    let name2 = (
+      await supabase
+        .from("users")
+        .select("nickname")
+        .eq("id", usersHistory.data[i].u2_id)
+    ).data[0].nickname;
+    let winner = (
+      await supabase
+        .from("users")
+        .select("nickname")
+        .eq("id", usersHistory.data[i].winner)
+    ).data[0].nickname;
+    newlist2.push({
+      ...usersHistory.data[i],
+      u1Name: name1,
+      u2Name: name2,
+      winner: winner,
+    });
   }
+  res.send(newlist2);
 };
 
 module.exports = {
