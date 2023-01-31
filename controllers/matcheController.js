@@ -48,7 +48,31 @@ const addMatche = async (req, res) => {
       winner: winner,
     };
     const matcheAdded = await supabase.from("games").insert(newMatche);
-    res.send(matcheAdded);
+    if (winner) {
+      const newScoreWn =
+        (await supabase.from("users").select("score").eq("id", winner)).data[0]
+          .score + 2;
+      const changeUserScore = await supabase
+        .from("users")
+        .update({ score: newScoreWn })
+        .eq("id", winner);
+    } else {
+      const newScoreU1 =
+        (await supabase.from("users").select("score").eq("id", u1_id)).data[0]
+          .score + 1;
+      const changeUser1Score = await supabase
+        .from("users")
+        .update({ score: newScoreU1 })
+        .eq("id", u1_id);
+      const newScoreU2 =
+        (await supabase.from("users").select("score").eq("id", u2_id)).data[0]
+          .score + 1;
+      const changeUser2Score = await supabase
+        .from("users")
+        .update({ score: newScoreU2 })
+        .eq("id", u2_id);
+    }
+    res.send("hello");
   } catch (err) {
     res.status(500).send(err);
   }
