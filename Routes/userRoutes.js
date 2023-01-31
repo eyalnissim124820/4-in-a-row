@@ -10,6 +10,6 @@ const userRouter = express.Router();
 
 userRouter.post("/signup", isUserExist, hashPassword, addUser);
 
-userRouter.get("/login", checkUser, checkpassword, loginUser);
+userRouter.post("/login", checkUser, checkpassword, loginUser);
 
 module.exports = userRouter;
