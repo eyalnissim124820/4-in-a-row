@@ -54,11 +54,16 @@ const addMatche = async (req, res) => {
 
 const getUserNickname = async (id) => {
   try {
-    const nickname = await supabase.from("users").select("*").eq("id");
+    const nicknameQuery = await supabase.from("users").select("*").eq("id", id);
+    return nicknameQuery;
   } catch (err) {
     console.log(err);
   }
 };
+
+// getUserNickname(3).then((res) => {
+//   console.log(res.data[0].nickname);
+// });
 
 const getUsersMatcheHistory = async (req, res) => {
   try {
@@ -66,8 +71,7 @@ const getUsersMatcheHistory = async (req, res) => {
       .from("games")
       .select("*")
       .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`);
-
-    res.send(usersHistory);
+    res.send(usersHistory.data);
   } catch (err) {
     res.status(500).send(err);
   }
