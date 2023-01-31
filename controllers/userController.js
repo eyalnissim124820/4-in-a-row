@@ -24,7 +24,18 @@ const addUser = async (req, res) => {
 };
 
 function loginUser(req, res) {
-  res.send({ ...req.result, password: null });
+  const { id, nickname } = req.result;
+  const token = jwt.sign(
+    {
+      id: id,
+      nickname: nickname,
+    },
+    process.env.TOKEN_SECRET,
+    {
+      expiresIn: "1h",
+    }
+  );
+  res.send(token);
   console.log("loggedin");
 }
 

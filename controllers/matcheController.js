@@ -1,6 +1,7 @@
 const colorSupport = require("color-support");
 const { map } = require("lodash");
 const supabase = require("../db/config");
+const jwt = require("jsonwebtoken");
 
 const getUserLastScore = async (req, res) => {
   console.log(req.params);
