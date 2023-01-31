@@ -35,7 +35,12 @@ function loginUser(req, res) {
       expiresIn: "1h",
     }
   );
-  res.send(token);
+  const userDetails ={
+    id,
+    nickname,
+    token
+  }
+  res.send(userDetails);
   console.log("loggedin");
 }
 

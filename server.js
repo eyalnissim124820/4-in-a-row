@@ -42,8 +42,9 @@ sockeIO.on("connection", (socket) => {
     }
     const roomUsers = sockeIO.sockets.adapter.rooms.get(data.roomId);
     if(roomUsers.size === 2){
-      sockeIO.to(data.roomId).emit("usersInRoom", usersOnRoom);
+      sockeIO.to(data.roomId).emit("usersInRoom", {usersOnRoom : usersOnRoom, roomId:data.roomId});
       usersOnRoom = []
+      console.log("usersonroom",usersOnRoom)
     }  
     console.log(roomUsers)
   });
