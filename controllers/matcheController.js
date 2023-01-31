@@ -1,3 +1,5 @@
+const colorSupport = require("color-support");
+const { map } = require("lodash");
 const supabase = require("../db/config");
 
 const getUserLastScore = async (req, res) => {
@@ -58,7 +60,25 @@ const getUsersMatcheHistory = async (req, res) => {
       .from("games")
       .select("*")
       .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`);
-    res.send(usersHistory);
+
+    const newlist2 = []
+    for (let game of usersHistory){
+      let name1 = (
+        await supabase.from("users").select("nickname").eq("id", game.u1_id)
+      ).data[0].nickname;
+      let name2 = (
+        await supabase.from("users").select("nickname").eq("id", game.u2_id)
+      ).data[0].nickname;
+      let winner = (
+        await supabase.from("users").select("nickname").eq("id", game.winner)
+      ).data[0].nickname;
+      newlist2.push({ ...game, u1Name: name1, u2Name: name2, winner: winner });
+      console.log(newlist2.length, usersHistory.length)
+      if (newlist2.length == usersHistory.length){
+        console.log("hey")
+      }
+    }
+   res.send(newlist);
   } catch (err) {
     res.status(500).send(err);
   }

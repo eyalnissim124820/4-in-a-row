@@ -12,10 +12,4 @@ userRouter.post("/signup", isUserExist, hashPassword, addUser);
 
 userRouter.get("/login", checkUser, checkpassword, loginUser);
 
-// userRouter.get("/scoreList", getUsersScoreList);
-// userRouter.put("/", updateUserScore);
-// userRouter.post("/login", loginUser);
-// userRouter.post("/logout", logoutUser);
-// userRouter.post("/login", loginIsUserExist, userController.loginUser);
-
 module.exports = userRouter;
