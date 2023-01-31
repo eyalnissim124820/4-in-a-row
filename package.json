@@ -143,6 +143,8 @@
     "side-channel": "^1.0.4",
     "signal-exit": "^3.0.7",
     "simple-update-notifier": "^1.1.0",
+    "socket.io": "^4.5.4",
+    "socket.io-client": "^4.5.4",
     "sqlstring": "^2.3.1",
     "statuses": "^2.0.1",
     "string_decoder": "^1.1.1",
@@ -163,6 +165,7 @@
     "util": "^0.10.4",
     "util-deprecate": "^1.0.2",
     "utils-merge": "^1.0.1",
+    "uuid": "^9.0.0",
     "vary": "^1.1.2",
     "webidl-conversions": "^3.0.1",
     "whatwg-url": "^5.0.0",
@@ -172,7 +175,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
