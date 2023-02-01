@@ -57,6 +57,11 @@ sockeIO.on("connection", (socket) => {
     console.log("room in game page", roomUsers)
     socket.to(data.roomId).emit("update", data);
   });
+
+  socket.on("endGame", data =>{
+    console.log("end game info",data)
+    socket.to(data.roomId).emit('endGame', data);
+  })
   socket.on("disconnect", () => {
     console.log("disconnected");
   });
