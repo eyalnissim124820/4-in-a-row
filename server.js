@@ -29,10 +29,7 @@ sockeIO.on("connection", (socket) => {
       usersOnRoom.push(data)
     }
     const roomUsers = sockeIO.sockets.adapter.rooms.get(data.roomId);
-    // if(roomUsers.size === 2){
-    //   sockeIO.to(data.roomId).emit("usersInRoom", usersOnRoom);
-    // }  
-    console.log(roomUsers)
+    console.log("create game",roomUsers)
   });
   socket.on("joinRoom2", async(data) => {
     
@@ -41,20 +38,27 @@ sockeIO.on("connection", (socket) => {
       usersOnRoom.push(data)
     }
     const roomUsers = sockeIO.sockets.adapter.rooms.get(data.roomId);
-    if(roomUsers.size === 2){
+    if(usersOnRoom.length == 2){
       sockeIO.to(data.roomId).emit("usersInRoom", {usersOnRoom : usersOnRoom, roomId:data.roomId});
       usersOnRoom = []
       console.log("usersonroom",usersOnRoom)
     }  
-    console.log(roomUsers)
+    console.log("join page room", roomUsers)
   });
 
-  socket.on("update", (table, room) => {
-    socket.to(room).emit(table);
+  socket.on('startGame',async (data)=>{
+    await socket.join(data.roomGame);
+    sockeIO.to(data.roomGame).emit('welcome', "You can play")
+
+  })
+
+  socket.on("update", (data) => {
+    const roomUsers = sockeIO.sockets.adapter.rooms.get(data.roomId);
+    console.log("room in game page", roomUsers)
+    socket.to(data.roomId).emit("update", data);
   });
   socket.on("disconnect", () => {
     console.log("disconnected");
-
   });
 });
 
