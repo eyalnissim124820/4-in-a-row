@@ -83,30 +83,32 @@ const getUsersMatcheHistory = async (req, res) => {
   const usersHistory = await supabase
     .from("games")
     .select("*")
-    .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`);
+    .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`)
+    .limit(5);
 
+  const revUsersHistory = usersHistory.data.reverse();
   const newlist2 = [];
-  for (let i = 0; i < usersHistory.data.length; i++) {
+  for (let i = 0; i < revUsersHistory.length; i++) {
     let name1 = (
       await supabase
         .from("users")
         .select("nickname")
-        .eq("id", usersHistory.data[i].u1_id)
+        .eq("id", revUsersHistory[i].u1_id)
     ).data[0].nickname;
     let name2 = (
       await supabase
         .from("users")
         .select("nickname")
-        .eq("id", usersHistory.data[i].u2_id)
+        .eq("id", revUsersHistory[i].u2_id)
     ).data[0].nickname;
     let winner = (
       await supabase
         .from("users")
         .select("nickname")
-        .eq("id", usersHistory.data[i].winner)
+        .eq("id", revUsersHistory[i].winner)
     ).data[0].nickname;
     newlist2.push({
-      ...usersHistory.data[i],
+      ...revUsersHistory[i],
       u1Name: name1,
       u2Name: name2,
       winner: winner,
