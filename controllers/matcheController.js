@@ -84,7 +84,7 @@ const getUsersMatcheHistory = async (req, res) => {
     .from("games")
     .select("*")
     .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`)
-    .limit(5);
+    .limit(10);
 
   const revUsersHistory = usersHistory.data.reverse();
   const newlist2 = [];

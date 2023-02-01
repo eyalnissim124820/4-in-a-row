@@ -37,11 +37,11 @@ async function checkUser(req, res, next) {
     .select("*")
     .eq("email", req.body.email);
   if (user.data.length == 0) {
-    console.log(user.data);
     res.status(400).send(false);
     return;
   }
   req.result = user.data[0];
+  console.log("kkkk", req.result);
   next();
 }
 

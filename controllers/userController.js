@@ -35,11 +35,11 @@ function loginUser(req, res) {
       expiresIn: "1h",
     }
   );
-  const userDetails ={
+  const userDetails = {
     id,
     nickname,
-    token
-  }
+    token,
+  };
   res.send(userDetails);
   console.log("loggedin");
 }
@@ -57,8 +57,21 @@ const getTopScores = async (req, res) => {
   }
 };
 
+async function getUsersCurrentScore(req, res) {
+  try {
+    const usersScore = await supabase
+      .from("users")
+      .select("score")
+      .eq("id", req.params.userId);
+    res.send(usersScore);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+}
+
 module.exports = {
   addUser,
   loginUser,
   getTopScores,
+  getUsersCurrentScore,
 };
