@@ -46,10 +46,7 @@ function loginUser(req, res) {
 
 const getTopScores = async (req, res) => {
   try {
-    const topScores = await supabase
-      .from("users")
-      .select("nickname,score")
-      .limit(10);
+    const topScores = await supabase.from("users").select("nickname,score");
     const newTopScores = topScores.data.sort((a, b) => b.score - a.score);
     res.send(newTopScores);
   } catch (err) {
