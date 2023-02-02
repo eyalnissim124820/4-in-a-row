@@ -83,8 +83,7 @@ const getUsersMatcheHistory = async (req, res) => {
   const usersHistory = await supabase
     .from("games")
     .select("*")
-    .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`)
-    .limit(10);
+    .or(`u2_id.eq.${req.params.userId},u1_id.eq.${req.params.userId}`);
 
   const revUsersHistory = usersHistory.data.reverse();
   const newlist2 = [];
