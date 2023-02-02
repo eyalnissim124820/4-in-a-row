@@ -1,4 +1,3 @@
-const users = [];
 
 function joinRoom(id, userName, roomId) {
   const user = { id, userName, roomId };
@@ -6,5 +5,15 @@ function joinRoom(id, userName, roomId) {
   return user;
 }
 
+function startGame(arr, roomId){
+  arr.forEach(element => {
+    if(roomId == element.roomId){
+      console.log("here")
+      console.log(roomId , element.roomId)
+      return true
+    }
+  });
+}
 
-module.exports = {joinRoom}
+
+module.exports = {joinRoom, startGame}

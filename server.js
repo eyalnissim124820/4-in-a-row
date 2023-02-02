@@ -5,11 +5,8 @@ const server = http.createServer(app);
 const usersRoute = require("./Routes/userRoutes");
 const matcheRoute = require("./Routes/matcheRoutes");
 const gameRoute = require("./Routes/gameRoute");
+const {startGame} =require ('./users')
 const cors = require("cors");
-const { joinRoom } = require("./users");
-const { join } = require("path");
-const { message } = require("statuses");
-const { json } = require("body-parser");
 app.use(express.json());
 app.use(cors());
 
@@ -25,31 +22,31 @@ sockeIO.on("connection", (socket) => {
 
   socket.on("joinRoom1", async(data) => {
     await socket.join(data.roomId)
-    if(usersOnRoom[0] != data){
       usersOnRoom.push(data)
-    }
     const roomUsers = sockeIO.sockets.adapter.rooms.get(data.roomId);
     console.log("create game",roomUsers)
   });
   socket.on("joinRoom2", async(data) => {
-    
+    console.log("room befor second user",usersOnRoom)
+
     await socket.join(data.roomId)
-    if(usersOnRoom[0] !=data){
+      const roomUsers = sockeIO.sockets.adapter.rooms.get(data.roomId);
       usersOnRoom.push(data)
+      if(roomUsers.size === 2){
+        console.log("emiting game")
+        sockeIO.to(data.roomId).emit("usersInRoom", {usersOnRoom : usersOnRoom, roomId:data.roomId});
+        console.log("usersonroom",usersOnRoom)
+        usersOnRoom = []
+      // }  
     }
-    const roomUsers = sockeIO.sockets.adapter.rooms.get(data.roomId);
-    if(usersOnRoom.length == 2){
-      sockeIO.to(data.roomId).emit("usersInRoom", {usersOnRoom : usersOnRoom, roomId:data.roomId});
-      usersOnRoom = []
-      console.log("usersonroom",usersOnRoom)
-    }  
+  
     console.log("join page room", roomUsers)
+    console.log("users on room",usersOnRoom)
   });
 
   socket.on('startGame',async (data)=>{
     await socket.join(data.roomGame);
     sockeIO.to(data.roomGame).emit('welcome', "You can play")
-
   })
 
   socket.on("update", (data) => {
@@ -61,6 +58,10 @@ sockeIO.on("connection", (socket) => {
   socket.on("endGame", data =>{
     console.log("end game info",data)
     socket.to(data.roomId).emit('endGame', data);
+  })
+
+  socket.on('player-left-game', data =>{
+    socket.to(data.roomId).emit('player-left-game',data)
   })
   socket.on("disconnect", () => {
     console.log("disconnected");
